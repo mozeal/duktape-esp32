@@ -181,6 +181,8 @@ function startIde() {
 		webSocketServer.listen(WEBSOCKET_PORT);
 		log("Being a WebSocket server on port " + WEBSOCKET_PORT);
    }
+   log("ESP32 Heap: " + ESP32.getState().heapSize);
+   
 } // startIde
 
 module.exports = startIde;
