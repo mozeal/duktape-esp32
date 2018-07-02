@@ -28,7 +28,7 @@ static uint32_t g_gpioISRHandlerStashKey = -1;
 LOG_TAG("module_gpio");
 
 static int gpio_isr_handler_dataProvider(duk_context *ctx, void *context) {
-	gpio_num_t pin = (gpio_num_t)context;
+    gpio_num_t pin = (gpio_num_t)context;
 	duk_push_int(ctx, pin);
 	return 1;
 }
@@ -38,6 +38,8 @@ static int gpio_isr_handler_dataProvider(duk_context *ctx, void *context) {
  * This function will be called when a GPIO interrupt occurs.
  */
 static void gpio_isr_handler(void *args) {
+    //LOGE("gpio_isr_handler");
+    
 	event_newCallbackRequestedEvent(
 		ESP32_DUKTAPE_CALLBACK_TYPE_ISR_FUNCTION,
 		g_gpioISRHandlerStashKey,
@@ -90,7 +92,7 @@ static duk_ret_t js_os_gpioInstallISRService(duk_context *ctx) {
 		LOGD("js_os_gpioInstallISRService: not a function!");
 		return 0;
 	}
-
+    
 	esp_err_t errRc = gpio_install_isr_service(flags);
 	if (errRc != ESP_OK) {
 		LOGE("gpio_install_isr_service: %s", esp32_errToString(errRc));
@@ -108,6 +110,9 @@ static duk_ret_t js_os_gpioISRHandlerAdd(duk_context *ctx) {
 		LOGE("js_os_gpioISRHandlerAdd: Pin %d out of range", pinNum);
 		return 0;
 	}
+	//LOGE("Install ISR servie: Flag %i", 0);
+	//gpio_install_isr_service(0);
+	LOGE("Native add ISR: Pin %i", pinNum);
 	esp_err_t errRc = gpio_isr_handler_add(pinNum, gpio_isr_handler, (void *)pinNum);
 	if (errRc != ESP_OK) {
 		LOGE("gpio_isr_handler_add: %s", esp32_errToString(errRc));
